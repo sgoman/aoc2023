@@ -30,14 +30,9 @@ const parseInput = input => {
     return result
 }
 
-const solve = (isPart2, input) => {
+const solve = (isPart2, input) => input.reduce((acc, cur) => acc += cur, 0)
 
-    return input.reduce((acc, cur) => acc += cur, 0)
-}
-
-const part1 = input => {
-    return solve(false, parseInput(input))
-}
+const part1 = input => solve(false, parseInput(input))
 
 const findFirst = input => {
 	let last = 1
@@ -63,9 +58,7 @@ const findLast = input => {
 const part2 = input => {
 	const result = []
 	for (const line of input.split('\n')) {
-		const first = findFirst(line)
-		const last = findLast(line)
-		result.push(1* (first + last))
+		result.push(1* (findFirst(line) + findLast(line)))
 	}
 	return solve(true, result)
 }
