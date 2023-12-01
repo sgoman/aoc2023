@@ -56,6 +56,9 @@ const findLast = input => {
 }
 
 const part2 = input => {
+    // CAUTION! It works with my input, but findLast might break on lines like
+    // 123twone
+    // The correct value should be 12, but findLast would report 11 instead.
 	const result = []
 	for (const line of input.split('\n')) {
 		result.push(1* (findFirst(line) + findLast(line)))
