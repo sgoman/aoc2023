@@ -1,6 +1,6 @@
 'use strict'
 
-const subs = [
+const substitutions = [
 	{ letters: "1", digit: "1" },
 	{ letters: "2", digit: "2" },
 	{ letters: "3", digit: "3" },
@@ -21,20 +21,7 @@ const subs = [
 	{ letters: "nine", digit: "9" }
 ]
 
-const parseInput = input => {
-    const result = []
-    for (const line of input.split('\n')) {
-        const nums = line.replace(/\D/g, '')
-        result.push(1* (nums[0] + nums[nums.length - 1]))
-    }
-    return result
-}
-
-const solve = (isPart2, input) => input.reduce((acc, cur) => acc += cur, 0)
-
-const part1 = input => solve(false, parseInput(input))
-
-const findFirst = input => {
+const findFirst = (input, subs) => {
 	let last = 1
 	while (last <= input.length) {
 		for (const n of subs) {
@@ -44,7 +31,7 @@ const findFirst = input => {
 	}
 }
 
-const findLast = input => {
+const findLast = (input, subs) => {
 	const l = input.length
 	let first = l - 1
 	while (first >= 0) {
@@ -55,15 +42,16 @@ const findLast = input => {
 	}
 }
 
-const part2 = input => {
-    // CAUTION! It works with my input, but findLast might break on lines like
-    // 123twone
-    // The correct value should be 12, but findLast would report 11 instead.
-	const result = []
-	for (const line of input.split('\n')) {
-		result.push(1* (findFirst(line) + findLast(line)))
-	}
-	return solve(true, result)
+const solve = (isPart2, input) => {
+    const subs = isPart2 ? substitutions : substitutions.filter(f => f.letters.length == 1)
+    return input
+        .split('\n')
+        .map(line => 1 * (findFirst(line, subs) + findLast(line, subs)))
+        .reduce((acc, cur) => acc += cur, 0)
 }
+
+const part1 = input => solve(false, input)
+
+const part2 = input => solve(true, input)
 
 module.exports = { part1, part2 }
