@@ -9,9 +9,19 @@ const parseInput = input => input.split('\n\n').reduce((puzzle, block, blockId) 
     return puzzle
 }, {seeds: [], maps: []})
 
+function* simpleGen(seeds) {
+    for (const seed of seeds) yield seed
+}
+
+function* rangeGen(seeds) {
+    for (let i = 0; i < seeds.length; i += 2) {
+        for (let seed = seeds[i], l = seeds[i] + seeds[i + 1]; seed < l; seed++) yield seed
+    }
+}
+
 const solve = (isPart2, input) => {
-    const results = []
-    for (let seed of input.seeds) {
+    let result = Infinity
+    for (let seed of (isPart2) ? rangeGen(input.seeds) : simpleGen(input.seeds)) {
         for (const block of input.maps) {
             for (const [dest, source, len] of block) {
                 if (seed >= source && seed < source + len) {
@@ -20,9 +30,9 @@ const solve = (isPart2, input) => {
                 }
             }
         }
-        results.push(seed)
+        result = Math.min(seed, result)
     }
-    return Math.min(...results)
+    return result
 }
 
 const part1 = input => {
