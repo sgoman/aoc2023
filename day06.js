@@ -26,7 +26,11 @@ const part1 = input => {
 }
 
 const part2 = input => {
-    return solve(true, parseInput(input))
+    const [time, dist] = input.split('\n').map(l => Number(l.split(':')[1].replaceAll(/\s+/g, '')))
+    let wins = 0
+    let t = 0
+    while(t++ < time) if ((time - t) * t > dist) wins++
+    return wins
 }
 
 module.exports = { part1, part2 }
