@@ -1,21 +1,5 @@
 'use strict'
 
-const strength = {
-	"2": 1,
-	"3": 2,
-	"4": 3,
-	"5": 4,
-	"6": 5,
-	"7": 6,
-	"8": 7,
-	"9": 8,
-	"B": 9,
-	"C": 10,
-	"D": 11,
-	"E": 12,
-	"F": 13
-}
-
 const translations = [
 	{ "from": "T", "to": "B" },
 	{ "from": "J", "to": "C" },
@@ -25,7 +9,7 @@ const translations = [
 ]
 
 const kind = hand => {
-	const k = {}
+	let k = {}
 	hand.split('').forEach(c => {
 		if (Object.keys(k).includes(c)) {
 			k[c] = k[c] + 1
@@ -33,6 +17,17 @@ const kind = hand => {
 			k[c] = 1
 		}
 	})
+	if (Object.keys(k).includes('1')) {
+		const joker = k
+		k = Object.fromEntries(Object.entries(k).filter(f => f[0] != '1'))
+		if (Object.values(k).length) {
+			const best = Object.entries(k).sort((a, b) => b[1] - a[1] || b[0].localeCompare(a[0]))[0][0]
+			console.log({hand, joker, best, k})
+			k[best] = k[best] + joker[1]
+		} else {
+			k[joker[0]] = joker[1]
+		}
+	}
 	const score = Object.values(k).sort((a, b) => b - a).join('')
 	if (score == '5') {
 		return 7
@@ -70,6 +65,7 @@ const part1 = input => {
 }
 
 const part2 = input => {
+	while(input.includes('J')) input = input.replace('J', '1')
     return solve(true, parseInput(input))
 }
 
