@@ -22,7 +22,6 @@ const kind = hand => {
 		k = Object.fromEntries(Object.entries(k).filter(f => f[0] != '1'))
 		if (Object.values(k).length) {
 			const best = Object.entries(k).sort((a, b) => b[1] - a[1] || b[0].localeCompare(a[0]))[0][0]
-			console.log({hand, joker, best, k})
 			k[best] = k[best] + joker[1]
 		} else {
 			k[joker[0]] = joker[1]
@@ -56,17 +55,13 @@ const parseInput = input => {
     }).sort((a, b) => a.kind - b.kind || a.hand.localeCompare(b.hand))
 }
 
-const solve = (isPart2, input) => {
-    return input.reduce((acc, cur, i) => acc + (i + 1) * cur.bid, 0)
-}
+const solve = input => input.reduce((acc, cur, i) => acc + (i + 1) * cur.bid, 0)
 
-const part1 = input => {
-    return solve(false, parseInput(input))
-}
+const part1 = input => solve(parseInput(input))
 
 const part2 = input => {
 	while(input.includes('J')) input = input.replace('J', '1')
-    return solve(true, parseInput(input))
+    return solve(parseInput(input))
 }
 
 module.exports = { part1, part2 }
