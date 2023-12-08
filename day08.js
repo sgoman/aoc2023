@@ -2,23 +2,26 @@
 
 const parseInput = input => [
     input.split('\n\n')[0],
-    input.split('\n\n')[1].split('\n').map(l => [...l.matchAll(/([A-Z]{3})/g)]).reduce((acc, cur) => { acc[cur[0][1]] = [cur[1][1], cur[2][1]]; return acc }, {})
+    input.split('\n\n')[1].split('\n').map(l => l.match(/[A-Z]+/g).slice(0, 3)).reduce((acc, [k, l, r]) => { acc[k] = [l, r]; return acc }, {}) // no matchAll
 ]
 
-const solve = (isPart2, [dirs, nodes]) => {
+const solve = ([dirs, nodes], loc) => {
     const l = dirs.length
     let s = 0
-    let loc = 'AAA'
-    while (loc != 'ZZZ') loc = nodes[loc][1 * (dirs[1 * (s++ % l)] == 'R')]
+    while (loc[2] != 'Z') loc = nodes[loc][1 * (dirs[1 * (s++ % l)] == 'R')]
     return s
 }
 
-const part1 = input => {
-    return solve(false, parseInput(input))
-}
+// Thanks, SO 47047682
+const gcd = (a, b) => a ? gcd(b % a, a) : b
+
+const lcm = (a, b) => a * b / gcd(a, b)
+
+const part1 = input => solve(parseInput(input), 'AAA')
 
 const part2 = input => {
-    return solve(true, parseInput(input))
+    const [dirs, nodes] = parseInput(input)
+    return Object.keys(nodes).filter(f => f[2] == 'A').map(loc => solve([dirs, nodes], loc)).reduce(lcm)
 }
 
 module.exports = { part1, part2 }
