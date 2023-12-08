@@ -6,9 +6,8 @@ const parseInput = input => [
 ]
 
 const solve = ([dirs, nodes], loc) => {
-    const l = dirs.length
     let s = 0
-    while (loc[2] != 'Z') loc = nodes[loc][1 * (dirs[1 * (s++ % l)] == 'R')]
+    while (loc[2] != 'Z') loc = nodes[loc][1 * (dirs[s++ % dirs.length] == 'R')]
     return s
 }
 
