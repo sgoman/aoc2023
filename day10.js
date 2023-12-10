@@ -50,12 +50,7 @@ const solve = (isPart2, grid) => {
             grid[row][col] = '#'
         }
     }
-    let inner = 0
-    for (let row = 35; row < 105; row++) {
-        for (let col = 35; col < 105; col++) {
-            if (grid[row][col] != '#') inner++
-        }
-    }
+    const inner = grid.slice(35, 105).reduce((acc, row) => acc + row.slice(35, 105).filter(f => f != '#').length, 0)
     return isPart2 ? inner : visited.size / 2 - 1
 }
 
