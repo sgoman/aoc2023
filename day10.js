@@ -44,15 +44,23 @@ const solve = (isPart2, grid) => {
             connections.push([nrow, ncol, 1 * pipes[grid[nrow][ncol]].replace((dir + 2) % 4, '')])
         }
     }
-    return visited.size / 2 - 1
+    for (const k of visited.values()) {
+        if (k.length > 2) {
+            const [row, col] = k.split('-')
+            grid[row][col] = '#'
+        }
+    }
+    let inner = 0
+    for (let row = 35; row < 105; row++) {
+        for (let col = 35; col < 105; col++) {
+            if (grid[row][col] != '#') inner++
+        }
+    }
+    return isPart2 ? inner : visited.size / 2 - 1
 }
 
-const part1 = input => {
-    return solve(false, parseInput(input))
-}
+const part1 = input => solve(false, parseInput(input))
 
-const part2 = input => {
-    return solve(true, parseInput(input))
-}
+const part2 = input => solve(true, parseInput(input))
 
 module.exports = { part1, part2 }
