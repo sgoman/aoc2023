@@ -1,9 +1,9 @@
 'use strict'
 
 const parseInput = (input, expansion) => {
-    let grid = input.split('\n').map(l => l.split(''))
+    const grid = input.split('\n').map(l => l.split(''))
     const emptyRows = grid.map((l, i) => [l, i]).filter(e => e[0].every(c => c == '.')).map(e => e[1])
-    let emptyCols = []
+    const emptyCols = []
     for (let c = 0; c < grid[0].length; c++) {
         if (grid.map(l => l[c]).every(e => e == '.')) emptyCols.push(c)
     }
