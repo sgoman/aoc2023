@@ -2,48 +2,32 @@
 
 const parseInput = input => input.split('\n').map(l => {
     const [pattern, condition] = l.split(' ')
-    return [pattern.replaceAll('.', ' ').replaceAll('?', '.'), condition.split(',').map(Number)]
+    return [pattern, condition.split(',').map(Number)]
 })
 
-const isValid = (pattern, condition) => {
-    // if (pattern.split('').filter(f => f != ' ' && f != '#').length) return false
-    const parts = pattern.trim().split(/\s+/g)
-    if (parts.length != condition.length) return false
-    for (let i = 0; i < parts.length; i++) {
-        if (parts[i].length != condition[i]) return false
-    }
-    return true
-}
-
-const solve = (isPart2, input) => {
-    let result = 0
-    for (const [pattern, condition] of input) {
-        if (isValid(pattern, condition)) {
-            result++
-        } else {
-            const spots = pattern.split('').filter(f => f == '.').length
-            const iterations = Math.pow(2, spots)
-            for (let mutation = 0; mutation < iterations; mutation++) {
-                const bin = (mutation >>> 0).toString(2).padStart(spots, '0').replaceAll('0', ' ').replaceAll('1', '#')
-                let patt = pattern.split('')
-                let found = 0
-                for (let p = 0; p < pattern.length; p++) {
-                    if (patt[p] == '.') patt[p] = bin[found++]
-                }
-                const mut = patt.join('')
-                if (isValid(mut, condition)) result++
-            }
+const solve = (memo, pattern, condition, p, c, spring) => {
+    const key = `${p}-${c}-${spring}`
+    if (Object.hasOwn(memo, key)) return memo[key]
+    if (p == pattern.length) return ((c == condition.length && spring == 0) || (c == condition.length - 1 && spring == condition[c]))
+    let t = 0
+    if ([".", "?"].includes(pattern[p])) {
+        if (spring == 0) {
+            t += solve(memo, pattern, condition, p + 1, c, 0)
+        } else if (condition[c] == spring) {
+            t += solve(memo, pattern, condition, p + 1, c + 1, 0)
         }
     }
-    return result
+    if (["#", "?"].includes(pattern[p])) {
+        t += solve(memo, pattern, condition, p + 1, c, spring + 1)
+    }
+    memo[key] = t
+    return t
 }
 
-const part1 = input => {
-    return solve(false, parseInput(input))
-}
+const part1 = input => parseInput(input).reduce((acc, [pattern, condition]) => acc + solve({}, pattern, condition, 0, 0, 0), 0)
 
-const part2 = input => {
-    return solve(true, parseInput(input))
-}
+const part2 = input => parseInput(input)
+        .map(([p, c]) => [[p, p, p, p, p].join('?'), [c, c, c, c, c].flat()])
+        .reduce((acc, [pattern, condition]) => acc + solve({}, pattern, condition, 0, 0, 0), 0)
 
 module.exports = { part1, part2 }
