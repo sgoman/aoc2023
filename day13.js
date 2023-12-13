@@ -5,11 +5,7 @@ const parseInput = input => input.split('\n\n').map(b => b.split('\n').map(l => 
 const levenstein = (a, b) => a.reduce((acc, c, i) => acc + (1* (c != b[i])), 0)
 
 const columns = block => block.reduce((cols, row, r, arr) => {
-    if (r == 0) {
-        for(let c = 0; c < row.length; c++) {
-            cols.push(arr.map(l => l[c]))
-        }
-    }
+    if (r == 0) for(let c = 0; c < row.length; c++) cols.push(arr.map(l => l[c]))
     return cols
 }, [])
 
@@ -19,12 +15,8 @@ const mirrors = (block, isPart2) => {
         let changed = !isPart2
         let lev = true
         if (isPart2 && !same) {
-            const l = levenstein(block[row], block[row + 1])
-            if (l == 1) {
-                changed = true
-            } else {
-                lev = false
-            }
+            const l = levenstein(block[row], block[row + 1]);
+            (l == 1) ? changed = true : lev = false
         }
         if (isPart2 ? !same && lev || same : same) {
             let mirrored = true
