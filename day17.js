@@ -5,19 +5,21 @@ const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]]
 const parseInput = input => input.split('\n').map(l => l.split('').map(Number))
 
 const solve = (isPart2, grid) => {
-    const maxDist = 3
+    const maxDist = isPart2 ? 10 : 3
+    const minDist = isPart2 ? 4 : 1
     const h = grid.length, w = grid[0].length
     const visited = new Set()
     const heap = new Heap((a, b) => a[0] - b[0])
     let best = Infinity
 
-    heap.insert([0, 0, 0, 0, 0]) // heat, row, col, dir, dirCount
+    heap.insert([0, 0, 0, 1, 0]) // heat, row, col, dir, dirCount
+    heap.insert([0, 0, 0, 2, 0])
     while(!heap.isEmpty()) {
         const [heat, row, col, dir, dirCount] = heap.delete()
         const k = `${row},${col},${dir},${dirCount}`
         if (visited.has(k)) continue
         visited.add(k)
-        if (row == h - 1 && col == w - 1) {
+        if (row == h - 1 && col == w - 1 && dirCount >= minDist) {
             best = Math.min(best, heat)
             continue
         }
@@ -26,10 +28,8 @@ const solve = (isPart2, grid) => {
             const nr = row + dr, nc = col + dc
             if (nr < 0 || nr >= h || nc < 0 || nc >= w || (d + 2) % 4 == dir) continue
             const nCount = (d == dir) ? dirCount + 1 : 1
-            if (nCount <= maxDist) {
-                // console.log({heat: heat + grid[nr][nc], nr, nc, d, nCount, best})
-                heap.insert([heat + grid[nr][nc], nr, nc, d, nCount])
-            }
+            if (nCount > maxDist || (heat && d != dir && dirCount < minDist)) continue
+            heap.insert([heat + grid[nr][nc], nr, nc, d, nCount])
         }
     }
     return best
