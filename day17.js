@@ -12,8 +12,7 @@ const solve = (isPart2, grid) => {
     const heap = new Heap((a, b) => a[0] - b[0])
     let best = Infinity
 
-    heap.insert([0, 0, 0, 1, 0]) // heat, row, col, dir, dirCount
-    heap.insert([0, 0, 0, 2, 0])
+    heap.insert([0, 0, 0, 0, 0]) // heat, row, col, dir, dirCount
     while(!heap.isEmpty()) {
         const [heat, row, col, dir, dirCount] = heap.delete()
         const k = `${row},${col},${dir},${dirCount}`
@@ -23,11 +22,9 @@ const solve = (isPart2, grid) => {
             best = Math.min(best, heat)
             continue
         }
-        // console.log({heat, k, best})
         for(const [d, [dr, dc]] of dirs.entries()) {
-            const nr = row + dr, nc = col + dc
+            const nr = row + dr, nc = col + dc, nCount = (d == dir) ? dirCount + 1 : 1
             if (nr < 0 || nr >= h || nc < 0 || nc >= w || (d + 2) % 4 == dir) continue
-            const nCount = (d == dir) ? dirCount + 1 : 1
             if (nCount > maxDist || (heat && d != dir && dirCount < minDist)) continue
             heap.insert([heat + grid[nr][nc], nr, nc, d, nCount])
         }
