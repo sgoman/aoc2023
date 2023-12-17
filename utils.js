@@ -5,7 +5,7 @@
 export const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]]
 
 // all 8 neighbours, but not the center piece
-export const neightbors = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
+export const neighbours = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
 
 // checks whether a row and colum exist in a grid
 export const validCoordForGrid = (row, col, grid) => row >= 0 && row < grid.length && col >= 0 && col < grid[row].length
@@ -60,73 +60,74 @@ export const range = function* () {
 }
 
 // taken from https://www.sahinarslan.tech/posts/deep-dive-into-data-structures-using-javascript-heap-binary-heap
+// methods and attributes starting with an underscore are considered private and should not be called from the outside
 // Min-Heap example: new Heap((a, b) => a[0] - b[0])
 // Max-Heap example: new Heap((a, b) => b[0] - a[0])
 class Heap {
     constructor(comparator) {
-        this.heap = []
-        this.comparator = comparator || ((a, b) => a - b)
+        this._heap = []
+        this._comparator = comparator || ((a, b) => a - b)
     }
 
-    size() { return this.heap.length }
+    size() { return this._heap.length }
 
     isEmpty() { return this.size() == 0 }
 
-    peek() { return this.heap[0] }
+    peek() { return this._heap[0] }
 
-    insert(value) { this.heap.push(value); this.heapifyUp() }
+    insert(value) { this._heap.push(value); this._heapifyUp() }
 
-    delete() {
+    extract() {
         if (this.isEmpty()) return null
         const poppedValue = this.peek()
         const bottom = this.size() - 1
-        if (bottom > 0) this.swap(0, bottom)
-        this.heap.pop()
-        this.heapifyDown()
+        if (bottom > 0) this._swap(0, bottom)
+        this._heap.pop()
+        this._heapifyDown()
         return poppedValue
     }
 
-    parentIndex(i) { return Math.floor((i - 1) / 2) }
+    _parentIndex(i) { return Math.floor((i - 1) / 2) }
 
-    parentValue(i) { return i < this.size() && this.parentIndex(i) >= 0 ? this.heap[this.parentIndex(i)] : undefined }
+    _parentValue(i) { return i < this.size() && this._parentIndex(i) >= 0 ? this._heap[this._parentIndex(i)] : undefined }
 
-    leftChildIndex(i) { return 2 * i + 1 }
+    _leftChildIndex(i) { return 2 * i + 1 }
 
-    leftChildValue(i) { return this.hasLeftChild(i) ? this.heap[this.leftChildIndex(i)] : undefined }
+    _leftChildValue(i) { return this._hasLeftChild(i) ? this._heap[this._leftChildIndex(i)] : undefined }
 
-    hasLeftChild(i) { return this.leftChildIndex(i) < this.size() }
+    _hasLeftChild(i) { return this._leftChildIndex(i) < this.size() }
 
-    rightChildIndex(i) { return 2 * i + 2 }
+    _rightChildIndex(i) { return 2 * i + 2 }
 
-    rightChildValue(i) { return this.hasRightChild(i) ? this.heap[this.rightChildIndex(i)] : undefined }
+    _rightChildValue(i) { return this._hasRightChild(i) ? this._heap[this._rightChildIndex(i)] : undefined }
 
-    hasRightChild(i) { return this.rightChildIndex(i) < this.size() }
+    _hasRightChild(i) { return this._rightChildIndex(i) < this.size() }
 
-    swap(i, j) { [this.heap[i], this.heap[j]] = [this.heap[j], this.heap[i]] }
+    _swap(i, j) { [this._heap[i], this._heap[j]] = [this._heap[j], this._heap[i]] }
 
-    heapifyUp() {
+    _heapifyUp() {
         let nodeIndex = this.size() - 1
-        while ( nodeIndex > 0 && this.comparator(this.parentValue(nodeIndex), this.heap[nodeIndex]) > 0) {
-            this.swap(nodeIndex, this.parentIndex(nodeIndex))
-            nodeIndex = this.parentIndex(nodeIndex)
+        while ( nodeIndex > 0 && this._comparator(this._parentValue(nodeIndex), this._heap[nodeIndex]) > 0) {
+            this._swap(nodeIndex, this._parentIndex(nodeIndex))
+            nodeIndex = this._parentIndex(nodeIndex)
         }
     }
 
-    heapifyDown() {
+    _heapifyDown() {
         let currNodeIndex = 0
-        while (this.hasLeftChild(currNodeIndex)) {
-            let smallerChildIndex = this.leftChildIndex(currNodeIndex)
+        while (this._hasLeftChild(currNodeIndex)) {
+            let smallerChildIndex = this._leftChildIndex(currNodeIndex)
             if (
-                this.hasRightChild(currNodeIndex) &&
-                this.comparator(
-                    this.rightChildValue(currNodeIndex),
-                    this.leftChildValue(currNodeIndex)
+                this._hasRightChild(currNodeIndex) &&
+                this._comparator(
+                    this._rightChildValue(currNodeIndex),
+                    this._leftChildValue(currNodeIndex)
                 ) < 0
             ) {
-                smallerChildIndex = this.rightChildIndex(currNodeIndex)
+                smallerChildIndex = this._rightChildIndex(currNodeIndex)
             }
-            if ( this.comparator( this.heap[currNodeIndex], this.heap[smallerChildIndex]) <= 0) break
-            this.swap(currNodeIndex, smallerChildIndex)
+            if ( this._comparator( this._heap[currNodeIndex], this._heap[smallerChildIndex]) <= 0) break
+            this._swap(currNodeIndex, smallerChildIndex)
             currNodeIndex = smallerChildIndex
         }
     }
@@ -135,3 +136,6 @@ class Heap {
 //////////////////// STRINGS
 // a simple algo for similarity, only comparing every nth element of a and b
 export const levenstein = (a, b) => a.reduce((acc, c, i) => acc + (1* (c != b[i])), 0)
+
+// returns a printable string where all columns of a row are glued together and the rows are joined by new line characters
+export const gridToString = grid => grid.map(l => l.join('')).join('\n')
