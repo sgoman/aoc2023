@@ -30,9 +30,7 @@ const solve = (isPart2, nodes) => {
 	for (const node in nodes) {
 		const type = nodes[node][0]
 		if (type == '%') memo[node] = false
-		if (type == '&') {
-			memo[node] = [...inputs.get(node).values()].reduce((acc, cur) => { acc[cur] = false; return acc }, {})
-		}
+		if (type == '&') memo[node] = [...inputs.get(node).values()].reduce((a, c) => { a[c] = false; return a }, {})
 	}
 
 	const rxInput = [...inputs.get('rx').values()][0]
