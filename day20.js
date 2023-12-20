@@ -41,39 +41,36 @@ const solve = (isPart2, nodes) => {
 	const loops = isPart2 ? Infinity : 1000
 
 	for (let i = 1; i <= loops; i++) {
-		let queue = [[null, 'broadcaster', false]]
+		const queue = [[null, 'broadcaster', false]]
 		while (queue.length) {
-			const upcoming = []
-			for (const [source, node, pulse] of queue) {
-				if (deciders.includes(node) && !pulse && !deciderLows.has(node)) {
-					deciderLows.set(node, i)
-					if (deciderLows.size == deciders.length && isPart2) return [...deciderLows.values()].reduce(lcm)
-				}
-				if (pulse) {
-					highs++
-				} else {
-					lows++
-				}
-				if (!Object.keys(nodes).includes(node)) continue // for example input with non-existant nodes
-				const [type, targets] = nodes[node]
-				switch(type) {
-					case 'b':
-						for (const target of targets) upcoming.push([node, target, pulse])
-						break
-					case '%':
-						if (!pulse) {
-							memo[node] = !memo[node]
-							for (const target of targets) upcoming.push([node, target, memo[node]])
-						}
-						break
-					case '&':
-						memo[node][source] = pulse
-						const allHigh = Object.values(memo[node]).every(v => v)
-						for (const target of targets) upcoming.push([node, target, !allHigh])
-						break
-				}
+			const [source, node, pulse] = queue.shift()
+			if (deciders.includes(node) && !pulse && !deciderLows.has(node)) {
+				deciderLows.set(node, i)
+				if (deciderLows.size == deciders.length && isPart2) return [...deciderLows.values()].reduce(lcm)
 			}
-			queue = upcoming
+			if (pulse) {
+				highs++
+			} else {
+				lows++
+			}
+			if (!Object.keys(nodes).includes(node)) continue // for example input with non-existant nodes
+			const [type, targets] = nodes[node]
+			switch(type) {
+				case 'b':
+					for (const target of targets) queue.push([node, target, pulse])
+					break
+				case '%':
+					if (!pulse) {
+						memo[node] = !memo[node]
+						for (const target of targets) queue.push([node, target, memo[node]])
+					}
+					break
+				case '&':
+					memo[node][source] = pulse
+					const allHigh = Object.values(memo[node]).every(v => v)
+					for (const target of targets) queue.push([node, target, !allHigh])
+					break
+			}
 		}
 	}
 	return lows * highs
