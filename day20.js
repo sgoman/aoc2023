@@ -115,7 +115,10 @@ const parseInput = input => input.split('\n').reduce((acc, line) => {
 	return acc
 }, {})
 
-const solve = (isPart2, nodes) => {
+const gcd = (a, b) => a ? gcd(b % a, a) : b
+const lcm = (a, b) => a * b / gcd(a, b)
+
+const solve1 = nodes => {
 	let lows = 0, highs = 0
 	const memo = {}
 	const inputs = new Map()
@@ -173,12 +176,73 @@ const solve = (isPart2, nodes) => {
     return lows * highs
 }
 
-const part1 = input => {
-    return solve(false, parseInput(input))
+const solve2 = nodes => {
+	let lows = 0, highs = 0
+	const memo = {}
+	const inputs = new Map()
+
+	for (const node in nodes) {
+		for (const target of nodes[node][1]) {
+			if (!inputs.has(target)) {
+				inputs.set(target, new Set())
+			}
+			const ins = inputs.get(target)
+			ins.add(node)
+			inputs.set(target, ins)
+		}
+	}
+	for (const node in nodes) {
+		const type = nodes[node][0]
+		if (type == '%') memo[node] = false
+		if (type == '&') {
+			memo[node] = [...inputs.get(node).values()].reduce((acc, cur) => { acc[cur] = false; return acc }, {})
+		}
+	}
+
+	const rxInput = [...inputs.get('rx').values()][0]
+	const deciders = [...inputs.get(rxInput).values()]
+	const deciderLows = new Map()
+	let tick = 0
+
+	while (deciderLows.size < deciders.length) {
+		tick++
+		let queue = [[null, 'broadcaster', false]]
+		while (queue.length) {
+			const upcoming = []
+			for (const [source, node, pulse] of queue) {
+				if (deciders.includes(node) && !pulse && !deciderLows.has(node)) deciderLows.set(node, tick)
+				if (pulse) {
+					highs++
+				} else {
+					lows++
+				}
+				if (!Object.keys(nodes).includes(node)) continue // for example input with non-existant nodes
+				const [type, targets] = nodes[node]
+				switch(type) {
+					case 'b':
+						for (const target of targets) upcoming.push([node, target, pulse])
+						break
+					case '%':
+						if (!pulse) {
+							memo[node] = !memo[node]
+							for (const target of targets) upcoming.push([node, target, memo[node]])
+						}
+						break
+					case '&':
+						memo[node][source] = pulse
+						const allHigh = Object.values(memo[node]).every(v => v)
+						for (const target of targets) upcoming.push([node, target, !allHigh])
+						break
+				}
+			}
+			queue = upcoming
+		}
+	}
+    return [...deciderLows.values()].reduce(lcm)
 }
 
-const part2 = input => {
-    return solve(true, parseInput(input))
-}
+const part1 = input => solve1(parseInput(input))
+
+const part2 = input => solve2(parseInput(input))
 
 module.exports = { part1, part2 }
