@@ -17,15 +17,15 @@ If you want to write a days challenge from scratch, issue "./aoc init 1" to gene
 The challenges
 --------------
 
-1. **[Trebuchet?!](day1.js)** Find the first and last digit in a number of strings. Part 2 makes you scan for "wordy" digits as well.
-2. **[Cube Conundrum](day2.js)** Draw a number of red, green and blue cubes from a bag and make educated guesses about the number total number of cubes inside.
-3. **[Gear Ratios](day3.js)** Find numbers adjacent to thingies. Any of them in part 1, only pairs touching a certain symbol on part 2.
-4. **[Scratchcards](day4.js)** You thought you only had to score points by matching pairs in the first part, while part 2 drowns you in more of the same card if there are matches.
-5. **[If You Give A Seed A Fertilizer](day5.js)** Yak shaving in the form of planting seeds. And the numbers increase in part 2 of course.
-6. **[Wait For It](day6.js)** Racing impossible toy boats that need charging. Again, part 2 lets you work the same principle with larger numbers.
-7. **[Camel Cards](day7.js)** Weird poker style game with cards of just one suit. First part features a simple scoring mechanic, part 2 has one type of card become a match-all kind.
-8. **[Haunted Wasteland](day8.js)** Navigate a graph from AAA to ZZZ in part one and all the \*A nodes to all the \*Z nodes in part 2.
-9. **[Mirage Maintenance](day9.js)** In part 1 you will get to know a useful algorithm to continue a series of numbers. Part 2 lets you use a variant of that algo to find a preceeding number.
+1. **[Trebuchet?!](day01.js)** Find the first and last digit in a number of strings. Part 2 makes you scan for "wordy" digits as well.
+2. **[Cube Conundrum](day02.js)** Draw a number of red, green and blue cubes from a bag and make educated guesses about the number total number of cubes inside.
+3. **[Gear Ratios](day03.js)** Find numbers adjacent to thingies. Any of them in part 1, only pairs touching a certain symbol on part 2.
+4. **[Scratchcards](day04.js)** You thought you only had to score points by matching pairs in the first part, while part 2 drowns you in more of the same card if there are matches.
+5. **[If You Give A Seed A Fertilizer](day05.js)** Yak shaving in the form of planting seeds. And the numbers increase in part 2 of course.
+6. **[Wait For It](day06.js)** Racing impossible toy boats that need charging. Again, part 2 lets you work the same principle with larger numbers.
+7. **[Camel Cards](day07.js)** Weird poker style game with cards of just one suit. First part features a simple scoring mechanic, part 2 has one type of card become a match-all kind.
+8. **[Haunted Wasteland](day08.js)** Navigate a graph from AAA to ZZZ in part one and all the \*A nodes to all the \*Z nodes in part 2.
+9. **[Mirage Maintenance](day09.js)** In part 1 you will get to know a useful algorithm to continue a series of numbers. Part 2 lets you use a variant of that algo to find a preceeding number.
 10. **[Pipe Maze](day10.js)** Title, nuff said. At least for the first part. Part 2 has you finding all tiles in the maze that are enclosed by the pipe loop.
 11. **[Cosmic Expansion](day11.js)** You get a map of galaxies and have to calculate the distance between pairs of each after expanding the map to double the space at certain points. Part 2 expands to a million times each!
 12. **[Hot Springs](day12.js)** Find possible group layouts in a pattern. You get 5 times the input with additional wildcards in part 2.
