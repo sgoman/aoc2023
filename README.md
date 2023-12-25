@@ -41,3 +41,4 @@ The challenges
 22. **[Sand Slabs](day22.js)** A game of Jenga under quirky constraints. Part 1 plays it safe and only lets you remove blocks that don't effect others while part 2 goes for maximum damage.
 23. **[A Long Walk](day23.js)** Find the longest path through a maze. Easy on part 1, where each split in the path is secured by one way passages. But those restrictions are ignored in part 2, which might be harder than it sounds at first.
 24. **[Never Tell Me The Odds](day24.js)** Velocity vectors at points in space. Part 1 is restricted to 2D space and just asks for intersecting paths, while part 2 goes full 3D and aks to find the point in time where the paths of all particles align.
+25. **[Snowverload](day25.js)** Grouping nodes in a graph to split them in two by cutting three edges. Trivial if you had access to networkx, otherwise not so much... You could also get lucky and have GraphViz load your input, but I wasn't.
