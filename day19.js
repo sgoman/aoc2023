@@ -44,7 +44,6 @@ const cloneRanges = ranges => {
 }
 
 const applyRulesToRanges = (rules, rule, ranges) => {
-    // console.log({rule, ranges, conditions: rules[rule]})
     let result = 0
     for (const condition of rules[rule]) {
         if (condition.includes('?')) {
@@ -53,15 +52,12 @@ const applyRulesToRanges = (rules, rule, ranges) => {
             const v = Number(condition.match(/(\d+)/)[1])
             const n = condition.split(':')[0].split('?')[1].trim().split('').slice(1, -1).join('')
             const nr = cloneRanges(ranges)
-            // console.log({rule, condition, k, o, v, n, result})
             if (o == '>') {
                 if (nr[k][1] > v) {
                     nr[k][0] = Math.max(nr[k][0], v + 1)
                     if (n == 'A') {
                         result += score(nr)
-                        // console.log({rule, condition, result, msg: 'accepted', nr})
                     } else if (n != 'R') {
-                        // console.log({rule, condition, result, msg: 'dive deeper into ' + n})
                         result += applyRulesToRanges(rules, n, nr)
                     }
                     ranges[k][1] = Math.min(ranges[k][1], v)
@@ -71,9 +67,7 @@ const applyRulesToRanges = (rules, rule, ranges) => {
                     nr[k][1] = Math.min(nr[k][1], v - 1)
                     if (n == 'A') {
                         result += score(nr)
-                        // console.log({rule, condition, result, msg: 'accepted', nr})
                     } else if (n != 'R') {
-                        // console.log({rule, condition, result, msg: 'dive deeper into ' + n})
                         result += applyRulesToRanges(rules, n, nr)
                     }
                     ranges[k][0] = Math.max(nr[k][0], v)
@@ -83,9 +77,7 @@ const applyRulesToRanges = (rules, rule, ranges) => {
             const cond = eval(condition)
             if (cond == 'A') {
                 result += score(ranges)
-                // console.log({rule, cond, result, msg: 'accepted', ranges})
             } else if (cond != 'R') {
-                // console.log({rule, cond, result, msg: 'unconditionally dive deeper'})
                 result += applyRulesToRanges(rules, cond, ranges)
             }
         }

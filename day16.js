@@ -18,11 +18,8 @@ const solve = (grid, beamRow, beamCol, beamDir) => {
         const [row, col, dir] = beams.shift()
         const pos = '' + row + '-' + col
         const state = pos + dir
-        if (repeated.has(state)) {
-            continue
-        } else {
-            repeated.add(state)
-        }
+        if (repeated.has(state)) continue
+        repeated.add(state)
         visited.add(pos)
         for (const [nr, nc, nd] of process[grid[row][col]][dir])
             if (onGrid(row + nr, col + nc)) beams.push([row + nr, col + nc, nd])
